@@ -17,17 +17,22 @@ public class SpawnedPlayer : MonoBehaviourPunCallbacks
         // Instancie le joueur et récupère la référence à la nouvelle instance
         GameObject spawnedPlayer = PhotonNetwork.Instantiate(playerPrefab1.name, spawnPos, Quaternion.identity);
 
-        // Change la couleur du joueur en fonction de s'il est MasterClient ou non
-        if (PhotonNetwork.IsMasterClient)
-        {
-            spawnedPlayer.GetComponent<SpriteRenderer>().color = Color.white;
-        }
-        else
-        {
-            spawnedPlayer.GetComponent<SpriteRenderer>().color = Color.black;
-        }
-
         // Assigne la caméra pour suivre le joueur instancié
         cameracinema.GetComponent<CinemachineVirtualCamera>().Follow = spawnedPlayer.transform;
+
+        // Appelle l'activation du Display via un RPC seulement pour le client local
+        ActivateLocalDisplay();
+    }
+
+    void ActivateLocalDisplay()
+    {
+        if (PhotonNetwork.IsMasterClient && !Display.displays[1].active)
+        {
+            Display.displays[1].Activate();
+        }
+        else if (!PhotonNetwork.IsMasterClient && !Display.displays[2].active)
+        {
+            Display.displays[2].Activate();
+        }
     }
 }
