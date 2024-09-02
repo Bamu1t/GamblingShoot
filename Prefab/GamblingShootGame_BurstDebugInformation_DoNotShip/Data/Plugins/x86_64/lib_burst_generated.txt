@@ -11,7 +11,7 @@ Library: C:\Users\leobr\OneDrive\Documents\GamblingShoot\GamblingShootGame\Temp\
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\leobr\OneDrive\Documents\GamblingShoot\GamblingShootGame\Temp\Burst
 --debug=Full
---key-folder=C:/Program Files/Unity/Hub/Editor/2022.3.41f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
+--key-folder=C:/Program Files/Unity/Hub/Editor/2022.3.41f1-x86_64/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
 --decode-folder=C:\Users\leobr\OneDrive\Documents\GamblingShoot\GamblingShootGame\Library\Burst
 --output=C:\Users\leobr\OneDrive\Documents\GamblingShoot\GamblingShootGame\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
@@ -59,7 +59,7 @@ Library: C:\Users\leobr\OneDrive\Documents\GamblingShoot\GamblingShootGame\Temp\
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\leobr\OneDrive\Documents\GamblingShoot\GamblingShootGame\Temp\Burst
 --debug=Full
---key-folder=C:/Program Files/Unity/Hub/Editor/2022.3.41f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
+--key-folder=C:/Program Files/Unity/Hub/Editor/2022.3.41f1-x86_64/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
 --decode-folder=C:\Users\leobr\OneDrive\Documents\GamblingShoot\GamblingShootGame\Library\Burst
 --output=C:\Users\leobr\OneDrive\Documents\GamblingShoot\GamblingShootGame\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/

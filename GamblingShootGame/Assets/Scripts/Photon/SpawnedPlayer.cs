@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using Cinemachine;
 
 public class SpawnedPlayer : MonoBehaviourPunCallbacks
 {
@@ -12,27 +11,31 @@ public class SpawnedPlayer : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        Vector2 spawnPos = new Vector2(0, 0);
-
-        // Instancie le joueur et récupère la référence à la nouvelle instance
-        GameObject spawnedPlayer = PhotonNetwork.Instantiate(playerPrefab1.name, spawnPos, Quaternion.identity);
-
-        // Assigne la caméra pour suivre le joueur instancié
-        cameracinema.GetComponent<CinemachineVirtualCamera>().Follow = spawnedPlayer.transform;
-
-        // Appelle l'activation du Display via un RPC seulement pour le client local
-        ActivateLocalDisplay();
+        // Vérifiez le nombre d'écrans disponibles
+        if (Display.displays.Length > 1)
+        {
+            ActivateLocalDisplay();
+        }
+        else
+        {
+            Debug.LogWarning("Il n'y a pas de display secondaire disponible.");
+        }
     }
 
     void ActivateLocalDisplay()
     {
-        if (PhotonNetwork.IsMasterClient && !Display.displays[1].active)
+        // Activation des écrans en fonction du client local
+        if (PhotonNetwork.IsMasterClient)
         {
             Display.displays[1].Activate();
+            Display.displays[2].SetRenderingResolution(0, 0);
+            Debug.Log("Display 1 activé par le MasterClient.");
         }
-        else if (!PhotonNetwork.IsMasterClient && !Display.displays[2].active)
+        else
         {
             Display.displays[2].Activate();
+            Display.displays[1].SetRenderingResolution(0, 0);
+            Debug.Log("Display 2 activé par un client non-Master.");
         }
     }
 }
