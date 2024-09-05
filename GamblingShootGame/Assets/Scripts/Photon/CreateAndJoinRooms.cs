@@ -11,6 +11,9 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public TMP_InputField joinInput;
     public Toggle privateroom;
     public byte maxPlayersPerRoom = 2;
+    public string lobbySceneName = "Lobby"; // Nom de la scène initiale
+    public string masterSceneName = "GameMaster"; // Nom de la scène pour le Master Client
+    public string clientSceneName = "GameClient"; // Nom de la scène pour les Clients
 
     public void CreateRoom()
     {
@@ -26,14 +29,13 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(joinInput.text);
     }
 
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LoadLevel("GameLobby");
+    }
     public void JoinRandomRoom()
     {
         PhotonNetwork.JoinRandomRoom();
-    }
-
-    public override void OnJoinedRoom()
-    {
-        PhotonNetwork.LoadLevel("Game");
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

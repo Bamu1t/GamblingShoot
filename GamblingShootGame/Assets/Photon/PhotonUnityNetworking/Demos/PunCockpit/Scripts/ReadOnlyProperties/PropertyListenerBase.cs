@@ -1,12 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RoomListView.cs" company="Exit Games GmbH">
-//   Part of: Pun Cockpit
-// </copyright>
-// <author>developer@exitgames.com</author>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections;
-
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,21 +11,27 @@ namespace Photon.Pun.Demo.Cockpit
     {
         public Graphic UpdateIndicator;
 
-        private YieldInstruction fadeInstruction = new YieldInstruction();
+        private float Duration = 1f;
 
-        float Duration = 1f;
         public void OnValueChanged()
         {
-            StartCoroutine(FadeOut(UpdateIndicator));
+            if (UpdateIndicator != null)
+            {
+                StartCoroutine(FadeOut(UpdateIndicator));
+            }
+            else
+            {
+                Debug.LogWarning("UpdateIndicator n'est pas assigné.");
+            }
         }
 
-        IEnumerator FadeOut(Graphic image)
+        private IEnumerator FadeOut(Graphic image)
         {
             float elapsedTime = 0.0f;
             Color c = image.color;
             while (elapsedTime < Duration)
             {
-                yield return fadeInstruction;
+                yield return new WaitForSeconds(0.1f); // Utilisez une instruction d'attente valide
                 elapsedTime += Time.deltaTime;
                 c.a = 1.0f - Mathf.Clamp01(elapsedTime / Duration);
                 image.color = c;
