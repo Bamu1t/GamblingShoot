@@ -42,6 +42,9 @@ MonoBehaviour:
   - ActivateDisplay
   - Dicespawner
   - RPC_PlayDiceRollAnimation
+  - DisableButton
+  - UpdateCounter1
+  - UpdateCounter2
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
