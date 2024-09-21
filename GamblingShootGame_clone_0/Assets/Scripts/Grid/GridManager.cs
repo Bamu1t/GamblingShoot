@@ -6,16 +6,14 @@ using TMPro;
 /*
  * GridManager Script:
  * 
- * This script is responsible for managing two grids, each containing 9 buttons. Player 1 controls Grid 1 and Player 2 controls Grid 2. 
- * Each player can only interact with the grid they are assigned to, and their actions (button clicks) are synchronized across both players
- * using Photon PUN 2 for multiplayer support.
+ * This script manages two grids, each with 9 buttons. Player 1 (MasterClient) controls Grid 1, and Player 2 (non-MasterClient) controls Grid 2.
+ * Each player's actions are synchronized across both players using Photon PUN 2.
  * 
  * How it works:
- * 1. We check if the current player is the MasterClient (Player 1) or the other player (Player 2).
- * 2. Depending on which player is connected, we enable or disable their grid’s buttons.
- * 3. When a player clicks a button on their grid, the button becomes unclickable for both players, and a counter specific to that grid 
- *    is incremented.
- * 4. This is done using Photon RPC calls to synchronize button states and counters across the network.
+ * 1. The script checks if the current player is Player 1 (MasterClient) or Player 2 (non-MasterClient).
+ * 2. It enables or disables buttons in the respective grids based on the player's role.
+ * 3. When a player clicks a button on their grid, the button becomes unclickable for both players, and the counter for that grid is incremented.
+ * 4. The updates are synchronized across the network using Photon RPC calls.
  */
 
 public class GridManager : MonoBehaviourPunCallbacks
@@ -36,15 +34,17 @@ public class GridManager : MonoBehaviourPunCallbacks
     void Start()
     {
         // Check if the current player is Player 1 (MasterClient)
-        if (PhotonNetwork.IsMasterClient) // Player 1 controls Grid 1
+        if (PhotonNetwork.IsMasterClient)
         {
-            // Enable buttons in Grid 1 for Player 1 and disable Grid 2 buttons
+            // Player 1 (MasterClient) controls Grid 1
+            // Enable buttons in Grid 1 and disable buttons in Grid 2
             EnableGridButtons(grid1Buttons, true);
             EnableGridButtons(grid2Buttons, false);
         }
-        else // Player 2 controls Grid 2
+        else
         {
-            // Enable buttons in Grid 2 for Player 2 and disable Grid 1 buttons
+            // Player 2 (non-MasterClient) controls Grid 2
+            // Disable buttons in Grid 1 and enable buttons in Grid 2
             EnableGridButtons(grid1Buttons, false);
             EnableGridButtons(grid2Buttons, true);
         }
@@ -55,7 +55,7 @@ public class GridManager : MonoBehaviourPunCallbacks
     {
         foreach (GameObject button in gridButtons)
         {
-            // Enable or disable the interactable property of the button
+            // Set the interactable property of each button
             button.GetComponent<Button>().interactable = enable;
         }
     }
@@ -65,20 +65,25 @@ public class GridManager : MonoBehaviourPunCallbacks
     // buttonIndex = index of the button clicked within the grid
     public void OnButtonClick(int gridIndex, int buttonIndex)
     {
+        Debug.Log($"Button clicked: Grid {gridIndex}, Button {buttonIndex}");
+
         // If Player 1 clicked a button in Grid 1
         if (PhotonNetwork.IsMasterClient && gridIndex == 1)
         {
+            Debug.Log("Calling UpdateCounter1 RPC");
             // Call an RPC to update the counter for Grid 1 across all players
             photonView.RPC("UpdateCounter1", RpcTarget.All);
         }
         // If Player 2 clicked a button in Grid 2
         else if (!PhotonNetwork.IsMasterClient && gridIndex == 2)
         {
+            Debug.Log("Calling UpdateCounter2 RPC");
             // Call an RPC to update the counter for Grid 2 across all players
             photonView.RPC("UpdateCounter2", RpcTarget.All);
         }
 
         // Call an RPC to disable the button that was clicked for all players
+        Debug.Log("Calling DisableButton RPC");
         photonView.RPC("DisableButton", RpcTarget.All, gridIndex, buttonIndex);
     }
 
@@ -86,6 +91,7 @@ public class GridManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateCounter1()
     {
+        Debug.Log("UpdateCounter1 called");
         // Increment the counter for Grid 1
         counter1++;
         // Update the counter display on the UI
@@ -96,6 +102,7 @@ public class GridManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateCounter2()
     {
+        Debug.Log("UpdateCounter2 called");
         // Increment the counter for Grid 2
         counter2++;
         // Update the counter display on the UI
@@ -106,6 +113,7 @@ public class GridManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void DisableButton(int gridIndex, int buttonIndex)
     {
+        Debug.Log($"DisableButton called: Grid {gridIndex}, Button {buttonIndex}");
         // Disable a button in Grid 1
         if (gridIndex == 1)
         {
